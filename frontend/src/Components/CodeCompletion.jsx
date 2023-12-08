@@ -36,13 +36,23 @@ const CodeCompletion = () => {
   };
 
   return (
-    <div>
-      <h2>Code Completion</h2>
-      <textarea value={codeSnippet} onChange={handleCodeChange} />
-      <button onClick={handleCodeCompletion}>Complete Code</button>
-      <div>
-        <h4>Completed Code:</h4>
-        <pre>{completedCode}</pre>
+    <div className="bg-gray-800 text-white p-8 rounded-lg shadow-md text-center">
+      <h2 className="text-2xl font-bold mb-4">Code Completion</h2>
+      <textarea
+        className="border p-2 w-full mb-4 text-black"
+        value={codeSnippet}
+        onChange={handleCodeChange}
+        placeholder="Enter your code snippet here"
+      />
+      <button
+        className="bg-blue-500 text-white font-bold py-2 px-4 rounded mx-auto block"
+        onClick={handleCodeCompletion}
+      >
+        Complete Code
+      </button>
+      <h4 className="text-xl font-bold mb-2 text-white text-left">Completed Code:</h4>
+      <div className="mt-8 bg-gray-700 p-4 rounded">
+        <pre className="text-white text-left">{completedCode}</pre>
       </div>
     </div>
   );

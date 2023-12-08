@@ -25,7 +25,7 @@ const TestCaseGeneration = () => {
                         and other row will contain expected output(Output),
                         in excel sheet table format with as many rows as you can generate.
                         Provide only the test cases in table format and no extra description, no explanation without any starting sentence`;
-  
+
       const response = await fetch('http://localhost:3000/api/test-case-generation', {
         method: 'POST',
         headers: {
@@ -33,22 +33,22 @@ const TestCaseGeneration = () => {
         },
         body: JSON.stringify({ functionSnippet: prompt }),
       });
-  
+
       const data = await response.json();
       console.log(data);
-  
+
       if (data && data.processedTestCases) {
         // Split rows by newline character
         const rows = data.processedTestCases.split('\n');
-  
+
         // Extract headers from the first row and remove empty strings
         const headers = rows[0].split('|').map(cell => cell.trim()).filter(Boolean);
-  
+
         // Process test cases starting from the third row
         const testCasesArray = rows.slice(2).map(row => {
           // Split values by '|' character, trim, and remove empty strings
           const values = row.split('|').map(cell => cell.trim()).filter(Boolean);
-  
+
           // Map values to headers to create test case object
           return headers.reduce((testCase, header, index) => {
             // Convert numeric values to numbers
@@ -56,7 +56,7 @@ const TestCaseGeneration = () => {
             return testCase;
           }, {});
         });
-  
+
         // Set the state with the processed test cases
         setGeneratedTestCases(testCasesArray);
       } else {
@@ -68,34 +68,50 @@ const TestCaseGeneration = () => {
       // Handle the error as needed
     }
   };
-  
+
 
 
   return (
-    <div>
-      <h2>Test Case Generation</h2>
-      <textarea value={functionSnippet} onChange={(e) => setFunctionSnippet(e.target.value)} />
-      <button onClick={handleGenerateTestCases}>Generate Test Cases</button>
-      <div>
-        <h4>Generated Test Cases:</h4>
+    <div className="bg-gray-800 text-white p-8 rounded-lg shadow-md max-h-70">
+      <h2 className="text-2xl font-bold mb-4">Test Case Generation</h2>
+      <textarea
+        className="border p-2 w-full mb-4 text-black"
+        value={functionSnippet}
+        onChange={(e) => setFunctionSnippet(e.target.value)}
+        placeholder="Enter your function snippet here"
+      />
+      <button
+        className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+        onClick={handleGenerateTestCases}
+      >
+        Generate Test Cases
+      </button>
+      <div className="mt-5 flex items-center">
+        <h4 className="text-xl font-bold mb-2 text-white mr-4">Generated Test Cases:</h4>
+        <DownloadTestCases testCases={generatedTestCases} />
+      </div>
+      <div className="mt-8 max-h-40 overflow-auto">
         {testCasesGenerated ? (
           generatedTestCases && generatedTestCases.length > 0 ? (
-            <table>
+            <table className="table-auto w-full ">
               {/* Render your table header */}
               <thead>
                 <tr>
-                  <th>Serial Number</th>
-                  <th>Input</th>
-                  <th>Output</th>
+                  <th className="border px-4 py-2">Serial Number</th>
+                  <th className="border px-4 py-2">Input</th>
+                  <th className="border px-4 py-2">Output</th>
                 </tr>
               </thead>
               {/* Render your table body */}
               <tbody>
                 {generatedTestCases.map((testCase, index) => (
-                  <tr key={index + 1}>
-                    <td>{testCase.Serial}</td>
-                    <td>{testCase.Input}</td>
-                    <td>{testCase.Output}</td>
+                  <tr
+                    key={index + 1}
+                    className={index % 2 === 0 ? 'bg-gray-700' : 'bg-gray-800'}
+                  >
+                    <td className="border px-4 py-2">{testCase.Serial}</td>
+                    <td className="border px-4 py-2">{testCase.Input}</td>
+                    <td className="border px-4 py-2">{testCase.Output}</td>
                   </tr>
                 ))}
               </tbody>
@@ -106,9 +122,6 @@ const TestCaseGeneration = () => {
         ) : (
           <p>Click the "Generate Test Cases" button to generate test cases.</p>
         )}
-
-         {/* Include the DownloadTestCases component and pass the generated test cases */}
-         <DownloadTestCases testCases={generatedTestCases} />
       </div>
     </div>
   );

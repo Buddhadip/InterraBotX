@@ -29,26 +29,37 @@ const CodeGeneration = () => {
   };
 
   return (
-    <div>
-      <h2>Code Generation</h2>
+    <div className="bg-gray-800 text-white p-8 rounded-lg shadow-md">
+    <h2 className="text-2xl font-bold mb-4">Code Generation</h2>
+    <div className="mb-4 flex space-x-4">
       <input
+        className="border p-2 flex-1 text-black"
         type="text"
         placeholder="Function Name"
         value={functionName}
         onChange={(e) => setFunctionName(e.target.value)}
       />
       <input
+        className="border p-2 flex-1 text-black"
         type="text"
         placeholder="Language"
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
       />
-      <button onClick={handleGenerateCode}>Generate Code</button>
-      <div>
-        <h4>Generated Code:</h4>
-        <pre>{generatedCode}</pre>
+    </div>
+    <button
+      className="bg-blue-500 hover:bg-blue-700 hover:ease-in duration-200 text-white font-bold py-2 px-4 rounded mx-auto block"
+      onClick={handleGenerateCode}
+    >
+      Generate Code
+    </button>
+      <div className="mt-8 overflow-auto max-h-60">
+        <h4 className="text-xl font-bold mb-2 text-white">Generated Code:</h4>
+        <div className="mt-8 bg-gray-700 p-4 rounded">
+        <pre className="text-white">{generatedCode}</pre>
       </div>
     </div>
+  </div>
   );
 };
 

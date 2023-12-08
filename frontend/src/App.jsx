@@ -1,16 +1,15 @@
 // App.jsx
 import React from 'react';
-import CodeCompletion from './Components/CodeCompletion';
-import CodeGeneration from './Components/CodeGeneration';
-import TestCaseGeneration from './Components/TestCaseGeneration';
+import InterraBotX from './Components/InterraBotX';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
+library.add(fas);
 
 const App = () => {
   return (
     <div>
-      <h1>React App</h1>
-      <CodeCompletion />
-      <CodeGeneration />
-      <TestCaseGeneration />
+      <InterraBotX />
     </div>
   );
 };
