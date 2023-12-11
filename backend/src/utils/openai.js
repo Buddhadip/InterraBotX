@@ -76,4 +76,5 @@ async function generateTestCases(functionSnippet) {
   }
 }
 
-export { generateCodeCompletion, generateCode, generateTestCases };
+
+export { generateCodeCompletion, generateCode, generateTestCases};
