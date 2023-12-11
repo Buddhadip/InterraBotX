@@ -2,22 +2,16 @@ import React, { useState, useEffect } from 'react';
 import DownloadTestCases from './DownloadTestCases';
 
 const extractFunctionFromPython = (content) => {
-  const functionRegex = /def\s+(\w+)\s*\([^)]*\)\s*:/;
-  // const match = functionRegex.exec(content);
+  const functionRegex = /def\s+(\w+)\s*\([^)]*\):([\s\S]*?)(?=\bdef\b|$)/g;
+  const matches = [];
+  let match;
 
-  // if (match) {
-  //   const functionName = match[1];
-  //   const functionBody = match[2].trim();
-  //   return `${functionName}:\n${functionBody}`;
-  // }
-  const match = content.match(functionRegex);
-
-  if (match && match[1]) {
-    const functionName = match[1];
-    return functionName;
+  // Find all matches
+  while ((match = functionRegex.exec(content)) !== null) {
+    matches.push({ name: match[1], body: match[2] });
   }
 
-  return null;
+  return matches;
 };
 
 const readFileContent = async (file) => {
@@ -34,6 +28,8 @@ const TestCaseGeneration = () => {
   const [functionSnippet, setFunctionSnippet] = useState('');
   const [generatedTestCases, setGeneratedTestCases] = useState([]);
   const [testCasesGenerated, setTestCasesGenerated] = useState(false);
+  const [functionsList, setFunctionsList] = useState([]); // Add this line
+  const [selectedFunction, setSelectedFunction] = useState(''); // Add this line
 
   useEffect(() => {
     // This will log the updated state whenever generatedTestCases changes
@@ -47,14 +43,27 @@ const TestCaseGeneration = () => {
 
   const handleGenerateTestCases = async () => {
     try {
-      const prompt = `${functionSnippet}\n\nwrite me unit test cases for this function ,
-                        containing both negative and positive test cases, 
-                        one row will contain serial number(Serial), 
-                        another row will contain input field of the function(Input) 
-                        and other row will contain expected output(Output),
-                        in excel sheet table format with as many rows as you can generate.
-                        Provide only the test cases in table format and no extra description, no explanation without any starting sentence`;
+      let prompt = '';
 
+      if (selectedFunction) {
+        // If a function is selected, use its snippet
+        prompt = `${selectedFunction} \n\nwrite me unit test cases for this function ,
+                           containing both negative and positive test cases, 
+                           one row will contain serial number(Serial), 
+                           another row will contain input field of the function(Input) 
+                           and other row will contain expected output(Output),
+                           in excel sheet table format with as many rows as you can generate.
+                           Provide only the test cases in table format and no extra description, no explanation without any starting sentence`;
+      } else {
+        // Otherwise, use the manually entered function snippet
+        prompt = `${functionSnippet} \n\nwrite me unit test cases for this function ,
+                          containing both negative and positive test cases, 
+                          one row will contain serial number(Serial), 
+                          another row will contain input field of the function(Input) 
+                          and other row will contain expected output(Output),
+                          in excel sheet table format with as many rows as you can generate.
+                          Provide only the test cases in table format and no extra description, no explanation without any starting sentence`;
+      }
       const response = await fetch('http://localhost:3000/api/test-case-generation', {
         method: 'POST',
         headers: {
@@ -82,17 +91,17 @@ const TestCaseGeneration = () => {
     if (file) {
       try {
         const content = await readFileContent(file);
-        console.log('File Content:', content); // Log the content
-        const functionName = extractFunctionFromPython(content);
+        const functions = extractFunctionFromPython(content);
 
-        console.log('Extracted Function Name:', functionName); // Log extracted function name
-  
-        if (functionName) {
-          setFunctionSnippet(`# Function extracted from file\n${functionName}\n`);
+        if (functions.length > 0) {
+          // Display a dropdown to select the function
+          setFunctionSnippet(`Select a function from dropwdown to generate test cases\n`);
+          setFunctionsList(functions);
+          setSelectedFunction('');
         } else {
-          console.error('Unable to extract function from Python file.');
+          console.error('Unable to extract functions from Python file.');
         }
-        
+
         event.target.value = ''; // Clear the input value to allow re-uploading of the same file
       } catch (error) {
         console.error('Error reading file content:', error);
@@ -125,10 +134,25 @@ const TestCaseGeneration = () => {
         <textarea
           id="functionSnippet"
           className="border p-2 w-full text-black"
-          value={functionSnippet}
+          value={ functionSnippet || selectedFunction }
           onChange={(e) => setFunctionSnippet(e.target.value)}
           placeholder="Enter your function snippet here"
         />
+
+        <select
+          className="mt-2 p-2 w-full text-black"
+          value={selectedFunction}
+          onChange={(e) => setSelectedFunction(e.target.value)}
+        >
+          <option value="" disabled >
+            Select a function
+          </option>
+          {functionsList.map((func) => (
+            <option key={func.name} value={func.name}>
+              {func.name}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="mb-4">
         <label htmlFor="fileUpload" className="block text-sm font-medium text-gray-400">
