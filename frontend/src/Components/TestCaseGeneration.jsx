@@ -1,6 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import DownloadTestCases from './DownloadTestCases';
 
+const extractFunctionFromPython = (content) => {
+  const functionRegex = /def\s+(\w+)\s*\([^)]*\)\s*:/;
+  // const match = functionRegex.exec(content);
+
+  // if (match) {
+  //   const functionName = match[1];
+  //   const functionBody = match[2].trim();
+  //   return `${functionName}:\n${functionBody}`;
+  // }
+  const match = content.match(functionRegex);
+
+  if (match && match[1]) {
+    const functionName = match[1];
+    return functionName;
+  }
+
+  return null;
+};
+
+const readFileContent = async (file) => {
+  try {
+    const content = await file.text();
+    return content;
+  } catch (error) {
+    console.error('Error reading file content:', error);
+    throw error;
+  }
+};
+
 const TestCaseGeneration = () => {
   const [functionSnippet, setFunctionSnippet] = useState('');
   const [generatedTestCases, setGeneratedTestCases] = useState([]);
@@ -38,35 +67,50 @@ const TestCaseGeneration = () => {
       console.log(data);
 
       if (data && data.processedTestCases) {
-        // Split rows by newline character
-        const rows = data.processedTestCases.split('\n');
-
-        // Extract headers from the first row and remove empty strings
-        const headers = rows[0].split('|').map(cell => cell.trim()).filter(Boolean);
-
-        // Process test cases starting from the third row
-        const testCasesArray = rows.slice(2).map(row => {
-          // Split values by '|' character, trim, and remove empty strings
-          const values = row.split('|').map(cell => cell.trim()).filter(Boolean);
-
-          // Map values to headers to create test case object
-          return headers.reduce((testCase, header, index) => {
-            // Convert numeric values to numbers
-            testCase[header] = isNaN(values[index]) ? values[index] : Number(values[index]);
-            return testCase;
-          }, {});
-        });
-
-        // Set the state with the processed test cases
+        const testCasesArray = processTestCasesData(data.processedTestCases);
         setGeneratedTestCases(testCasesArray);
       } else {
         console.error('Error: processedTestCases is undefined in the response');
-        // Handle the case where processedTestCases is not present in the response
       }
     } catch (error) {
       console.error('An error occurred:', error);
-      // Handle the error as needed
     }
+  };
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      try {
+        const content = await readFileContent(file);
+        console.log('File Content:', content); // Log the content
+        const functionName = extractFunctionFromPython(content);
+
+        console.log('Extracted Function Name:', functionName); // Log extracted function name
+  
+        if (functionName) {
+          setFunctionSnippet(`# Function extracted from file\n${functionName}\n`);
+        } else {
+          console.error('Unable to extract function from Python file.');
+        }
+        
+        event.target.value = ''; // Clear the input value to allow re-uploading of the same file
+      } catch (error) {
+        console.error('Error reading file content:', error);
+      }
+    }
+  };
+
+  const processTestCasesData = (processedTestCases) => {
+    const rows = processedTestCases.split('\n');
+    const headers = rows[0].split('|').map(cell => cell.trim()).filter(Boolean);
+
+    return rows.slice(2).map(row => {
+      const values = row.split('|').map(cell => cell.trim()).filter(Boolean);
+      return headers.reduce((testCase, header, index) => {
+        testCase[header] = isNaN(values[index]) ? values[index] : Number(values[index]);
+        return testCase;
+      }, {});
+    });
   };
 
 
@@ -74,12 +118,30 @@ const TestCaseGeneration = () => {
   return (
     <div className="bg-gray-800 text-white p-8 rounded-lg shadow-md max-h-70">
       <h2 className="text-2xl font-bold mb-4">Test Case Generation</h2>
-      <textarea
-        className="border p-2 w-full mb-4 text-black"
-        value={functionSnippet}
-        onChange={(e) => setFunctionSnippet(e.target.value)}
-        placeholder="Enter your function snippet here"
-      />
+      <div className="mb-4">
+        <label htmlFor="functionSnippet" className="block text-sm font-medium text-gray-400">
+          Function Snippet:
+        </label>
+        <textarea
+          id="functionSnippet"
+          className="border p-2 w-full text-black"
+          value={functionSnippet}
+          onChange={(e) => setFunctionSnippet(e.target.value)}
+          placeholder="Enter your function snippet here"
+        />
+      </div>
+      <div className="mb-4">
+        <label htmlFor="fileUpload" className="block text-sm font-medium text-gray-400">
+          Upload Code File:
+        </label>
+        <input
+          type="file"
+          id="fileUpload"
+          accept=".js, .py, .java, .cpp, .c"
+          onInput={handleFileUpload}
+          className="mt-1 p-2 w-full"
+        />
+      </div>
       <button
         className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
         onClick={handleGenerateTestCases}
