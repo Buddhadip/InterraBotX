@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import CodeCompletion from './CodeCompletion';
 import CodeGeneration from './CodeGeneration';
 import TestCaseGeneration from './TestCaseGeneration';
-import UploadCode from './UploadCode';
-
 
 const InterraBotX = () => {
   const [selectedUseCase, setSelectedUseCase] = useState('');
@@ -65,7 +63,6 @@ const InterraBotX = () => {
               <option value="codeCompletion">Code Completion</option>
               <option value="codeGeneration">Code Generation</option>
               <option value="testCaseGeneration">Test Case Generation</option>
-              <option value="uploadCode">Upload Code</option>
             </select>
           </label>
 
