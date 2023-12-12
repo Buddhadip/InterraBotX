@@ -1,10 +1,11 @@
 // testCaseGeneration.js
 import express from 'express';
+import { validateFunctionSnippet } from '../middleware/validationMiddleware.js'
 import { generateTestCases } from '../utils/openai.js';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', validateFunctionSnippet, async (req, res) => {
   const functionSnippet = req.body.functionSnippet;
 
   try {
