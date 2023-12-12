@@ -30,7 +30,7 @@ const CodeGeneration = () => {
 
   return (
     <div className="bg-gray-800 text-white p-8 rounded-lg shadow-md">
-    <h2 className="text-2xl font-bold mb-4">Code Generation</h2>
+    <h2 className="text-2xl font-bold mb-4">Function Generation</h2>
     <div className="mb-4 flex space-x-4">
       <input
         className="border p-2 flex-1 text-black"
