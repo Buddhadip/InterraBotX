@@ -1,5 +1,6 @@
 // InterraBotX.jsx
 import React, { useState } from 'react';
+import CodeChat from './CodeChat';
 import CodeCompletion from './CodeCompletion';
 import CodeGeneration from './CodeGeneration';
 import TestCaseGeneration from './TestCaseGeneration';
@@ -60,8 +61,9 @@ const InterraBotX = () => {
               onChange={handleUseCaseChange}
             >
               <option value="">Select Use Case</option>
+              <option value="codeChat">Code Generation Chat</option>
               <option value="codeCompletion">Code Completion</option>
-              <option value="codeGeneration">Code Generation</option>
+              <option value="codeGeneration">Function Generation</option>
               <option value="testCaseGeneration">Test Case Generation</option>
             </select>
           </label>
@@ -84,6 +86,7 @@ const InterraBotX = () => {
 
         {/* Right Panel */}
         <div className="w-3/4 pl-4">
+          {selectedUseCase === 'codeChat' && <CodeChat/>}
           {selectedUseCase === 'codeCompletion' && <CodeCompletion />}
           {selectedUseCase === 'codeGeneration' && <CodeGeneration />}
           {selectedUseCase === 'testCaseGeneration' && <TestCaseGeneration />}
