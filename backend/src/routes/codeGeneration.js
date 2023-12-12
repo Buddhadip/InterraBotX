@@ -1,10 +1,11 @@
 // codeGeneration.js
 import express from 'express';
+import { validateUserInput } from '../middleware/validationMiddleware.js';
 import { generateCode } from '../utils/openai.js'; // Correct import
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', validateUserInput, async (req, res) => {
   const userInput = req.body.userInput;
 
   try {
