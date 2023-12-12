@@ -1,10 +1,11 @@
 // codeCompletion.js
 import express from 'express';
+import { validateCodeSnippet } from '../middleware/validationMiddleware.js';
 import { generateCodeCompletion } from '../utils/openai.js';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', validateCodeSnippet, async (req, res) => {
   const codeSnippet = req.body.codeSnippet;
   console.log('Received codeSnippet:', codeSnippet);
 
