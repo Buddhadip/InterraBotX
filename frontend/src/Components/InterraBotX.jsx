@@ -27,7 +27,8 @@ const InterraBotX = () => {
       {/* Top Bar */}
       <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold">InterraBotX</h1>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button id="logout" 
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Logout
         </button>
       </div>
@@ -61,7 +62,7 @@ const InterraBotX = () => {
               onChange={handleUseCaseChange}
             >
               <option value="">Select Use Case</option>
-              <option value="codeChat">Code Generation Chat</option>
+              <option value="codeChat">Code Chat</option>
               <option value="codeCompletion">Code Completion</option>
               <option value="codeGeneration">Function Generation</option>
               <option value="testCaseGeneration">Test Case Generation</option>
@@ -80,15 +81,24 @@ const InterraBotX = () => {
               <option value="">Select Language</option>
               <option value="java">Java</option>
               <option value="python">Python</option>
+              <option value="c">C</option>
+              <option value="cpp">C++</option>
+              <option value="go">Go</option>
+              <option value="assembly">Assembly</option>
+              <option value="ruby">Ruby</option>
+              <option value="perl">Perl</option>
+              <option value="typescript">TypeScript</option>
+              <option value="rust">Rust</option>
+              <option value="swift">Swift</option>
             </select>
           </label>
         </div>
 
         {/* Right Panel */}
         <div className="w-3/4 pl-4">
-          {selectedUseCase === 'codeChat' && <CodeChat/>}
+          {selectedUseCase === 'codeChat' && <CodeChat />}
           {selectedUseCase === 'codeCompletion' && <CodeCompletion />}
-          {selectedUseCase === 'codeGeneration' && <CodeGeneration />}
+          {selectedUseCase === 'codeGeneration' && <CodeGeneration selectedLanguage={selectedLanguage} />}
           {selectedUseCase === 'testCaseGeneration' && <TestCaseGeneration />}
           {selectedUseCase === 'uploadCode' && <UploadCode />}
         </div>
