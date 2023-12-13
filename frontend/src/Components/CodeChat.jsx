@@ -38,7 +38,7 @@ const CodeChat = () => {
 
   return (
     <div className="bg-gray-800 text-white p-8 rounded-lg shadow-md text-center">
-        <h2 className="text-2xl font-bold mb-4">Code Chat Generation</h2>
+        <h2 className="text-2xl font-bold mb-4">Code Chat</h2>
     <div className="input-area mb-4">
       <input
         type="text"
