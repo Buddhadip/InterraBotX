@@ -101,17 +101,17 @@ async function handleChatResponse(userInput) {
 
 
 //=================================================================//
-async function generateUnitTestCode(testFunction) {
+async function generateUnitTestCode(testCodeSnippet) {
   try {
-    const unit_test = await openai.chat.completion.create({
+    const unit_test = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      message: [
+      messages: [
         { role: "system", content: "You are a helpful assistant." },
-        { role: "user", content: testFunction },
+        { role: "user", content: testCodeSnippet },
       ],
     });
 
-    const generatedUnitTestCode = unit_test.choice[0].message.content;
+    const generatedUnitTestCode = unit_test.choices[0].message.content;
     console.log(generatedUnitTestCode);
     return generatedUnitTestCode;
   } catch (error) {
