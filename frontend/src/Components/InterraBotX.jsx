@@ -4,6 +4,7 @@ import CodeChat from './CodeChat';
 import CodeCompletion from './CodeCompletion';
 import CodeGeneration from './CodeGeneration';
 import TestCaseGeneration from './TestCaseGeneration';
+import UnitTestCodeGeneration from './UnitTestCodeGeneration';
 
 const InterraBotX = () => {
   const [selectedUseCase, setSelectedUseCase] = useState('');
@@ -66,6 +67,7 @@ const InterraBotX = () => {
               <option value="codeCompletion">Code Completion</option>
               <option value="codeGeneration">Function Generation</option>
               <option value="testCaseGeneration">Test Case Generation</option>
+              <option value="unitTestCode">Unit Test Code</option>
             </select>
           </label>
 
@@ -100,7 +102,7 @@ const InterraBotX = () => {
           {selectedUseCase === 'codeCompletion' && <CodeCompletion />}
           {selectedUseCase === 'codeGeneration' && <CodeGeneration selectedLanguage={selectedLanguage} />}
           {selectedUseCase === 'testCaseGeneration' && <TestCaseGeneration />}
-          {selectedUseCase === 'uploadCode' && <UploadCode />}
+          {selectedUseCase === 'unitTestCode' && <UnitTestCodeGeneration selectedLanguage={selectedLanguage}/>}
         </div>
       </div>
     </div>
