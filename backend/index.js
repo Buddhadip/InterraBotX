@@ -6,6 +6,7 @@ import codeChatRoutes from './src/routes/codeChat.js';
 import codeCompletionRoutes from "./src/routes/codeCompletion.js";
 import codeGenerationRoutes from "./src/routes/codeGeneration.js";
 import testCaseGenerationRoutes from "./src/routes/testCaseGeneration.js";
+import unitTestCodeGenerationRoutes from "./src/routes/unitTestCodeGeneration.js";
 import "./src/utils/openai.js";
 
 dotenv.config();
@@ -26,6 +27,7 @@ app.use('/api/code-chat', codeChatRoutes);
 app.use("/api/code-completion", codeCompletionRoutes);
 app.use("/api/code-generation", codeGenerationRoutes);
 app.use("/api/test-case-generation", testCaseGenerationRoutes);
+app.use('/api/unit-test-code-generation', unitTestCodeGenerationRoutes);
 
 
 app.listen(port, () => {
