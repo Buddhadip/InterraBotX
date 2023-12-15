@@ -2,12 +2,25 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
 
+
 dotenv.config();
 
 const openai = new OpenAI({
   organization: process.env.ORGANIZATION_ID,
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+function isLanguageName(candidate) {
+  // List of known programming languages
+  const languages = ['c', 'cpp', 'assembly', 'java', 'javascript', 'typescript', 'go', 'swift', 'ruby', 'perl'];
+
+  // Convert candidate to lowercase for case-insensitivity
+  const lowercaseCandidate = candidate.toLowerCase();
+
+  // Check if the candidate is in the list of known languages
+  return languages.includes(lowercaseCandidate);
+}
+
 
 async function generateCodeCompletion(codeSnippet) {
   console.log("Received codeSnippet:", codeSnippet);
@@ -110,9 +123,19 @@ async function generateUnitTestCode(testCodeSnippet) {
         { role: "user", content: testCodeSnippet },
       ],
     });
-
-    const generatedUnitTestCode = unit_test.choices[0].message.content;
-    console.log(generatedUnitTestCode);
+    
+    const generatedUnitTest = unit_test.choices[0].message.content;
+     // Split the content by lines
+     const lines = generatedUnitTest.split('\n');
+     // Check if the first line looks like a programming language name
+     const languageName = lines[0].trim();
+     const isLanguage = isLanguageName(languageName);
+     // Omit the first line if it looks like a language name
+     const generatedUnitTestCode = isLanguage ? lines.slice(1).join('\n') : generatedUnitTest;
+     console.log('Language Name:', languageName);
+     console.log('Is Language:', isLanguage);
+     console.log('Generated Unit Test:', generatedUnitTest);
+     console.log('Generated Unit Test Code:', generatedUnitTestCode);
     return generatedUnitTestCode;
   } catch (error) {
     console.error("OpenAI API error:", error);
