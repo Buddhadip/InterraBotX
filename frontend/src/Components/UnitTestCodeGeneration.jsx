@@ -30,11 +30,10 @@ const UnitTestCodeGeneration = ({selectedLanguage}) => {
         return;
       }
 
-        // prompt = `${testCodeSnippet} \ngenerate a code in ${selectedLanguage} language  which can unit
-        // test this function after taking  data 
-        // from a csv file named testcases.csv , just provide the code part,do not write any explanation or sentence, 
-        // containg following columns with name {columns}
-        // code can use any external libray or modules , or can generate from scratch`;
+      if(!selectedLanguage.trim()){
+        toast.error('Please select a language from the dropdown');
+        return;
+      }
       
         // Make a POST request to the backend API
         const requestOptions = {
