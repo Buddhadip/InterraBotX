@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-//import '../Styles/button.css';
 
 // Wrapper component to omit backticks from the code snippet
 const CodeSnippet = ({ language, children }) => {

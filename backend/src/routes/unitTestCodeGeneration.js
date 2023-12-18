@@ -36,13 +36,6 @@ router.post('/', async (req, res) => {
 
     // Send the generated unit test code as the response
     res.json({ generatedUnitTestCode });
-    
-    
-    // // Call the OpenAI API for generating unit test code with the provided function snippet
-    // const generatedUnitTestCode = await generateUnitTestCode(testCodeSnippet);
-
-    // // Send the generated unit test code as the response
-    // res.json({ generatedUnitTestCode });
   } catch (error) {
     console.error('Error in routes:', error.message);
     res.status(500).json({ error: 'Internal server error' });
